@@ -5,13 +5,46 @@ from config import TELEGRAM_TOKEN
 from random import randint
 from aiogram import Bot, Dispatcher, types, executor
 from neiro import get_response
+from neir import get_response1
+from nei import get_response2
+from ne import get_response3
 
 bot = Bot(token=TELEGRAM_TOKEN)
 dp = Dispatcher(bot)
 
+async def set_commands(bot: Bot):
+    commands = [
+        types.BotCommand(command='/start', description='Запуск бота'),
+        types.BotCommand(command='/joke', description='Шутка'),
+        types.BotCommand(command='/cat', description='Факты о котиках'),
+        types.BotCommand(command='/coffee', description='Десерты к кофе')
+    ]
+    await bot.set_my_commands(commands)
+
 @dp.message_handler(commands= 'start')
 async def func_start(message: types.Message):
     await message.answer('Привет, я твой шедеврум на максималках')
+
+@dp.message_handler(commands= 'joke')
+async def joke(message: types.Message):
+    text = message.get_args()
+    print(text)
+    response_joke = await get_response1(text)
+    await message.answer(response_joke)
+
+@dp.message_handler(commands= 'cat')
+async def cat(message: types.Message):
+    text1 = message.get_args()
+    print(text1)
+    response_cat = await get_response2(text1)
+    await message.answer(response_cat)
+
+@dp.message_handler(commands= 'coffee')
+async def coffee(message: types.Message):
+    text2 = message.get_args()
+    print(text2)
+    response_coffee = await get_response3(text2)
+    await message.answer(response_coffee)
 
 def generate_image(prompt_text):
 
@@ -63,5 +96,8 @@ async def analize_message(message: types.Message):
     except Exception as e:
         await message.reply(f'Произошла ошибка {e}')
 
+async def on_startup(dispatcher):
+    await set_commands(dispatcher.bot)
+
 if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True)
+    executor.start_polling(dp, skip_updates=True, on_startup= on_startup)

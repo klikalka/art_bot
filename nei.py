@@ -8,9 +8,9 @@ API_KEY = 'AQVNxnZzc6oh7wYQWT05IWj2wEfjAAXmUcttuq44'
 
 @dp.message_handler(commands='start')
 async def start(message: types.Message):
-    await message.reply("Аллеу")
+    await message.reply("Прив")
 
-async def get_response(message_text):
+async def get_response2(message_text):
     prompt = {
     "modelUri": "gpt://b1go1t8vie998tqjdjhu/yandexgpt-lite",
     "completionOptions": {
@@ -21,7 +21,7 @@ async def get_response(message_text):
     "messages": [
         {
             "role": "system",
-            "text": "Ты - нейросеть, помогающая улучшить промт. Исправь сообщение, написанное пользователем, в одно единственное предложение."
+            "text": "Ты - нейросеть, которая отправляет пользователю рандомные факты про котов. Отправь на просьбу пользователя об информации про котов один интересный факт про них в одном единственное предложение."
         },
         {
             "role": "user",
@@ -40,13 +40,13 @@ async def get_response(message_text):
 
     response = requests.post(url, headers=headers, json=prompt)
     print(response)
-    result = response.json()
-    print(result)
-    return result['result']['alternatives'][0]['message']['text']
+    cat = response.json()
+    print(cat)
+    return cat['result']['alternatives'][0]['message']['text']
 
 @dp.message_handler()
 async def analize_message(message:types.Message):
-    response_text = await get_response((message.text))
+    response_text = await get_response2((message.text))
     await message.answer(response_text)
 
 if __name__ == '__main__':
